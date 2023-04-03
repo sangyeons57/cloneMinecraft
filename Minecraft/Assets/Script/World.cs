@@ -24,9 +24,10 @@ public class World : MonoBehaviour
     {
         //Random.InitState(seed);
 
-        spawnPosition = new Vector3((VoxelData.WorldSizeInChunks * VoxelData.chunkWidth) / 2f, VoxelData.chunkHeight, (VoxelData.WorldSizeInChunks * VoxelData.chunkWidth) / 2f);
+        spawnPosition = new Vector3((VoxelData.WorldSizeInChunks * VoxelData.chunkWidth) / 2f, VoxelData.chunkHeight - 10, (VoxelData.WorldSizeInChunks * VoxelData.chunkWidth) / 2f);
+        Debug.Log("spawnpsoition " + spawnPosition);
         GenrateWorld();
-        playerLastChunkCoord = GetChunkCoordFromVector3(player.position); 
+        playerLastChunkCoord = GetChunkCoordFromVector3(player.position);
     }
 
     private void Update()
@@ -39,11 +40,11 @@ public class World : MonoBehaviour
         */
     }
 
-    void GenrateWorld ()
+    void GenrateWorld()
     {
-        for (int x = (VoxelData.WorldSizeInChunks / 2) - VoxelData.ViewDistanceInChunks ; x < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistanceInChunks; x++)
+        for (int x = (VoxelData.WorldSizeInChunks / 2) - VoxelData.ViewDistanceInChunks; x < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistanceInChunks; x++)
         {
-            for (int z = (VoxelData.WorldSizeInChunks / 2) - VoxelData.ViewDistanceInChunks ; z < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistanceInChunks; z++)
+            for (int z = (VoxelData.WorldSizeInChunks / 2) - VoxelData.ViewDistanceInChunks; z < (VoxelData.WorldSizeInChunks / 2) + VoxelData.ViewDistanceInChunks; z++)
             {
                 CreateNewChunk(x, z);
             }
@@ -64,9 +65,9 @@ public class World : MonoBehaviour
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunk);
 
-        for ( int x = coord.x - VoxelData.ViewDistanceInChunks; x < coord.x + VoxelData.ViewDistanceInChunks; x++)
+        for (int x = coord.x - VoxelData.ViewDistanceInChunks; x < coord.x + VoxelData.ViewDistanceInChunks; x++)
         {
-            for ( int z = coord.z - VoxelData.ViewDistanceInChunks; z < coord.z + VoxelData.ViewDistanceInChunks; z++)
+            for (int z = coord.z - VoxelData.ViewDistanceInChunks; z < coord.z + VoxelData.ViewDistanceInChunks; z++)
             {
                 if (IsChunkInWorld(new ChunkCoord(x, z)))
                 {
@@ -74,23 +75,38 @@ public class World : MonoBehaviour
                         CreateNewChunk(x, z);
                     else if (!chunks[x, z].isActive)
                     {
-                        chunks[x,z].isActive = true;
+                        chunks[x, z].isActive = true;
                         activeChunk.Add(new ChunkCoord(x, z));
                     }
                 }
 
-                for (int i = 0; i< previouslyActiveChunks.Count; i++)
+                for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
-                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x,z)))
+                    if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
                         previouslyActiveChunks.RemoveAt(i);
                 }
             }
         }
 
-        foreach(ChunkCoord c in previouslyActiveChunks)
+        foreach (ChunkCoord c in previouslyActiveChunks)
         {
             chunks[c.x, c.z].isActive = false;
         }
+    }
+
+    public bool CheckForVoxel(float _x, float _y, float _z)
+    {
+        int xCheck = Mathf.FloorToInt(_x);
+        int yCheck = Mathf.FloorToInt(_y);
+        int zCheck = Mathf.FloorToInt(_z);
+
+        int xChunk = xCheck / VoxelData.chunkWidth;
+        int zChunk = zCheck / VoxelData.chunkWidth;
+
+        xCheck -= (xChunk * VoxelData.chunkWidth);
+        zCheck -= (zChunk * VoxelData.chunkWidth);
+
+        return blockTypes[chunks[xChunk, zChunk].voxelMap[xCheck, yCheck, zCheck]].isSolid;
     }
     
     public byte GetVoxel (Vector3 pos)
@@ -131,8 +147,6 @@ public class World : MonoBehaviour
             }
         }
         return voxelValue;
-
-
     }
 
     void CreateNewChunk (int x, int z)
