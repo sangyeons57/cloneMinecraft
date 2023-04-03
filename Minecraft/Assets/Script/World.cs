@@ -32,8 +32,11 @@ public class World : MonoBehaviour
     private void Update()
     {
         playerChunkCoord = GetChunkCoordFromVector3(player.position);
+
+        /*
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
             CheckViewDistance();
+        */
     }
 
     void GenrateWorld ()
