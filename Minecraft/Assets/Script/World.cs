@@ -131,7 +131,6 @@ public class World : MonoBehaviour
             return blockTypes[chunks[thisChunk.x, thisChunk.z].GetVoxelfromGlobalVector3(pos)].isSolid;
 
         return blockTypes[GetVoxel(pos)].isSolid;
-
     }
     
     public byte GetVoxel (Vector3 pos)
