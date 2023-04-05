@@ -27,7 +27,7 @@ public class World : MonoBehaviour
 
     private void Start()
     {
-        //Random.InitState(seed);
+        Random.InitState(seed);
 
         spawnPosition = new Vector3((VoxelData.WorldSizeInChunks * VoxelData.chunkWidth) / 2f, VoxelData.chunkHeight - 10, (VoxelData.WorldSizeInChunks * VoxelData.chunkWidth) / 2f);
         Debug.Log("spawnpsoition " + spawnPosition);
@@ -88,6 +88,7 @@ public class World : MonoBehaviour
     void CheckViewDistance()
     {
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
+        playerLastChunkCoord = playerChunkCoord;
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunk);
 
         for (int x = coord.x - VoxelData.ViewDistanceInChunks; x < coord.x + VoxelData.ViewDistanceInChunks; x++)
