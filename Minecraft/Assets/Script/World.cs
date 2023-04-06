@@ -90,6 +90,7 @@ public class World : MonoBehaviour
         ChunkCoord coord = GetChunkCoordFromVector3(player.position);
         playerLastChunkCoord = playerChunkCoord;
         List<ChunkCoord> previouslyActiveChunks = new List<ChunkCoord>(activeChunk);
+        activeChunk.Clear();
 
         for (int x = coord.x - VoxelData.ViewDistanceInChunks; x < coord.x + VoxelData.ViewDistanceInChunks; x++)
         {
@@ -112,13 +113,17 @@ public class World : MonoBehaviour
                 for (int i = 0; i < previouslyActiveChunks.Count; i++)
                 {
                     if (previouslyActiveChunks[i].Equals(new ChunkCoord(x, z)))
+                    {
                         previouslyActiveChunks.RemoveAt(i);
+                    }
                 }
             }
         }
 
         foreach (ChunkCoord c in previouslyActiveChunks)
+        {
             chunks[c.x, c.z].isActive = false;
+        }
     }
 
     public bool CheckForVoxel(Vector3 pos)
