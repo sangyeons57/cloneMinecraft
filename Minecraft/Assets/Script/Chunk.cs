@@ -46,7 +46,6 @@ public class Chunk
 
         PopulateVoxelMap();
         UpdateChunk();
-        createMesh();
     }
 
     void PopulateVoxelMap ()
@@ -67,6 +66,7 @@ public class Chunk
 
     void UpdateChunk()
     {
+        ClearMeshData();
         for (int y = 0; y < VoxelData.chunkHeight; y++)
         {
             for (int x = 0; x < VoxelData.chunkWidth; x++)
@@ -78,7 +78,7 @@ public class Chunk
                 }
             }
         }
-
+        createMesh();
     }
 
     void ClearMeshData()
@@ -124,7 +124,6 @@ public class Chunk
         // Update Surrounding Chunks;
 
         UpdateChunk();
-
     }
 
     void UpdateSurroundingVoxels(int x, int y, int z)

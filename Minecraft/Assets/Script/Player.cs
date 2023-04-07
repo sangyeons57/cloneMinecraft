@@ -26,6 +26,8 @@ public class Player : MonoBehaviour
     private float verticalMomentum = 0;
     private bool jumpRequest;
 
+    private float blockAdvantage = 0.05f;
+
     public Transform highlightBlock;
     public Transform placeBlock;
     public float checkIncrement = 0.1f;
@@ -100,8 +102,8 @@ public class Player : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
-        mouseHorizontal = Input.GetAxis("Mouse X");
-        mouseVertical = Input.GetAxis("Mouse Y");
+        mouseHorizontal = Input.GetAxis("Mouse X") * 20f;
+        mouseVertical = Input.GetAxis("Mouse Y") * 20f;
 
         if (Input.GetButtonDown("Sprint"))
             isSprinting = true;
@@ -149,6 +151,8 @@ public class Player : MonoBehaviour
             {
                 highlightBlock.position = new Vector3(Mathf.FloorToInt(pos.x), Mathf.FloorToInt(pos.y), Mathf.FloorToInt(pos.z));
                 placeBlock.position = lastPos;
+                Debug.Log("pos: " + pos);
+                Debug.Log("LastPos: " + lastPos);
 
                 highlightBlock.gameObject.SetActive(true);
                 placeBlock.gameObject.SetActive(true);
@@ -167,6 +171,7 @@ public class Player : MonoBehaviour
 
     private float checkDownSpeed(float downSpeed)
     {
+        float playerWidth = this.playerWidth - blockAdvantage;
         if (
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth))||
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth))||
@@ -185,6 +190,7 @@ public class Player : MonoBehaviour
 
     private float checkUpSpeed(float upSpeed)
     {
+        float playerWidth = this.playerWidth - blockAdvantage;
         if (
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth))||
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth))||
