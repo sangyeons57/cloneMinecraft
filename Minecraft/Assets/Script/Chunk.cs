@@ -116,9 +116,19 @@ public class Chunk
 
     public void EditVoxel (Vector3 pos, byte newID)
     {
+
         int xCheck = Mathf.FloorToInt(pos.x);
         int yCheck = Mathf.FloorToInt(pos.y);
         int zCheck = Mathf.FloorToInt(pos.z);
+
+        int Player_xCheck = Mathf.FloorToInt(world.player.position.x);
+        int Player_yCheck = Mathf.FloorToInt(world.player.position.y);
+        int Player_yUpCheck = Mathf.FloorToInt(world.player.position.y) + 1;
+        int Player_zCheck = Mathf.FloorToInt(world.player.position.z);
+
+
+        if (newID != 0 && (xCheck == Player_xCheck && (yCheck == Player_yCheck || yCheck == Player_yUpCheck) && zCheck == Player_zCheck)) return ;
+
 
         xCheck -= Mathf.FloorToInt(chunkObject.transform.position.x);
         zCheck -= Mathf.FloorToInt(chunkObject.transform.position.z);
