@@ -345,8 +345,8 @@ MonoBehaviour:
     icon: {fileID: 1115165957, guid: 490995855f18aa040b3cabda63d15ed3, type: 3}
     backFaceTexture: 5
     frontFaceTexture: 5
-    topFaceTexture: 4
-    bottomFaceTexture: 4
+    topFaceTexture: 6
+    bottomFaceTexture: 6
     leftFaceTexture: 5
     rightFaceTexture: 5
   - blockName: Planks
@@ -389,6 +389,16 @@ MonoBehaviour:
     bottomFaceTexture: 3
     leftFaceTexture: 3
     rightFaceTexture: 3
+  - blockName: Grass
+    isSolid: 1
+    isTransparent: 1
+    icon: {fileID: 470085936, guid: 490995855f18aa040b3cabda63d15ed3, type: 3}
+    backFaceTexture: 16
+    frontFaceTexture: 16
+    topFaceTexture: 16
+    bottomFaceTexture: 16
+    leftFaceTexture: 16
+    rightFaceTexture: 16
   debugScreen: {fileID: 1240892559}
 --- !u!4 &136570798
 Transform:

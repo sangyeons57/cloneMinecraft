@@ -26,8 +26,6 @@ public class Player : MonoBehaviour
     private float verticalMomentum = 0;
     private bool jumpRequest;
 
-    private float blockAdvantage = 0.05f;
-
     public Transform highlightBlock;
     public Transform placeBlock;
     public float checkIncrement = 0.1f;
@@ -153,7 +151,6 @@ public class Player : MonoBehaviour
 
     private float checkDownSpeed(float downSpeed)
     {
-        float playerWidth = this.playerWidth - blockAdvantage;
         if (
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth))||
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + downSpeed, transform.position.z - playerWidth))||
@@ -172,7 +169,6 @@ public class Player : MonoBehaviour
 
     private float checkUpSpeed(float upSpeed)
     {
-        float playerWidth = this.playerWidth - blockAdvantage;
         if (
             world.CheckForVoxel(new Vector3(transform.position.x - playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth))||
             world.CheckForVoxel(new Vector3(transform.position.x + playerWidth, transform.position.y + 2f + upSpeed, transform.position.z - playerWidth))||

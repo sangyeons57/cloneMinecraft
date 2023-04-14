@@ -17,8 +17,9 @@ MonoBehaviour:
   terrainHeight: 42
   TerrainScale: 0.25
   treeZoneScale: 1.3
-  treePlacmentScale: 1.5
   treeZoneThreshold: 0.6
+  treePlacementScale: 15
+  treePlacementThreshold: 0.8
   maxTreeHeight: 12
   minTreeHeight: 5
   lodes:
