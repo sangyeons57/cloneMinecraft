@@ -19,6 +19,8 @@ public class Chunk
 
     public byte[,,] voxelMap = new byte[VoxelData.chunkWidth, VoxelData.chunkHeight, VoxelData.chunkWidth];
 
+    public Queue<VoxelMod> modification = new Queue<VoxelMod>();
+
     World world;
 
     private bool _isActive;
@@ -69,8 +71,15 @@ public class Chunk
     }
 
 
-    void UpdateChunk()
+    public void UpdateChunk()
     {
+        while (modification.Count  > 0)
+        {
+            VoxelMod v = modification.Dequeue();
+            Vector3 pos = v.position -= position;
+            voxelMap[(int)pos.x, (int)pos.y, (int)pos.z] = v.id;
+        }
+
         ClearMeshData();
         for (int y = 0; y < VoxelData.chunkHeight; y++)
         {

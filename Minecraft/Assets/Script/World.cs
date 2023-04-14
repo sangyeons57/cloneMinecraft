@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UIElements;
+using Random = UnityEngine.Random;
 
 public class World : MonoBehaviour
 {
@@ -22,7 +24,10 @@ public class World : MonoBehaviour
     ChunkCoord playerLastChunkCoord;
 
     List<ChunkCoord> chunksToCreate = new List<ChunkCoord>();
+    List<Chunk> chunksToUpdate = new List<Chunk>();
     private bool isCreatingChunks;
+
+    Queue<VoxelMod> modification = new Queue<VoxelMod>();
 
     public GameObject debugScreen;
 
@@ -60,6 +65,29 @@ public class World : MonoBehaviour
                 chunks[x, z] = new Chunk(new ChunkCoord(x, z), this,true);
                 activeChunk.Add(new ChunkCoord(x, z));
             }
+        }
+
+        while (modification.Count > 0)
+        {
+            VoxelMod v = modification.Dequeue();
+
+            ChunkCoord c = GetChunkCoordFromVector3(v.position);
+
+            if (chunks[c.x, c.z] == null)
+            {
+                chunks[c.x, c.z] = new Chunk(c, this, true);
+                activeChunk.Add(c);
+            }
+            chunks[c.x, c.z].modification.Enqueue(v);
+
+            if (!chunksToUpdate.Contains(chunks[c.x, c.z]))
+                chunksToUpdate.Add(chunks[c.x, c.z]);
+        }
+
+        for (int i = 0; i < chunksToUpdate.Count; i++)
+        {
+            chunksToUpdate[0].UpdateChunk();
+            chunksToUpdate.RemoveAt(0);
         }
 
         player.position = spawnPosition;
@@ -188,6 +216,7 @@ public class World : MonoBehaviour
         else
             voxelValue = 2;
 
+        /* SECOND PASS*/
         if (voxelValue == 2)
         {
             foreach (Lode lode in biome.lodes)
@@ -197,6 +226,21 @@ public class World : MonoBehaviour
                         voxelValue = lode.blockID;
             }
         }
+
+        /* TREE PASS*/
+        if (yPos == terrainHeight)
+        {
+            if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treeZoneScale) > biome.treeZoneThreshold)
+            {
+                voxelValue = 1;
+                if (Noise.Get2DPerlin(new Vector2(pos.x, pos.z), 0, biome.treePlacementScale) > biome.treePlacementThreshold)
+                {
+                    voxelValue = 8;
+                    modification.Enqueue(new VoxelMod(new Vector3(pos.x, pos.y + 1, pos.z), 6));
+                }
+            }
+        }
+
         return voxelValue;
     }
 
@@ -245,3 +289,23 @@ public class BlockType
         }
     }
 }
+
+public class VoxelMod
+{
+    public Vector3 position;
+    public byte id;
+
+    public VoxelMod()
+    {
+        position = new Vector3();
+        id = 0;
+    }
+
+    public VoxelMod(Vector3 position, byte id)
+    {
+        this.position = position;
+        this.id = id;
+    }
+
+}
+
